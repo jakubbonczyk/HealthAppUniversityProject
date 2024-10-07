@@ -1,0 +1,13 @@
+<resources>
+    <!-- Styl podstawowy dla aplikacji -->
+    <style name="Base.Theme.PamietajOZdrowiu" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Tu możesz zdefiniować ogólne atrybuty stylu -->
+    </style>
+
+    <!-- Styl dla przycisku -->
+    <style name="Widget.SquareButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/button_dark</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>
