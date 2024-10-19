@@ -16,6 +16,18 @@
             android:name=".YourDrugsActivity"
             android:exported="false" />
         <activity
+            android:name=".CalendarActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NotificationsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HealtHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".YourFeelingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

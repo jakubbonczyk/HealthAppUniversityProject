@@ -24,13 +24,34 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button button = findViewById(R.id.button10);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick (View v) {
-                Intent intent = new Intent(MainActivity.this, YourDrugsActivity.class);
-                startActivity(intent);
-            }
+        Button drugsButton = findViewById(R.id.button10);
+        drugsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, YourDrugsActivity.class);
+            startActivity(intent);
+        });
+
+        Button calendarButton = findViewById(R.id.button9);
+        calendarButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            startActivity(intent);
+        });
+
+        Button notificationsButton = findViewById(R.id.button);
+        notificationsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+            startActivity(intent);
+        });
+
+        Button healthHistoryButton = findViewById(R.id.button2);
+        healthHistoryButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, HealtHistoryActivity.class);
+            startActivity(intent);
+        });
+
+        Button yourFeelingsButton = findViewById(R.id.button3);
+        yourFeelingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, YourFeelingsActivity.class);
+            startActivity(intent);
         });
     }
 }
