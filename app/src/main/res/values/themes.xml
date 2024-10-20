@@ -16,4 +16,10 @@
         <item name="cornerRadius">16dp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+    <style name="Widget.OvalButton" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/white</item>
+        <item name="cornerRadius">100dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 </resources>
