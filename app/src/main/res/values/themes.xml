@@ -22,4 +22,11 @@
         <item name="cornerRadius">100dp</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
+
+    <style name="DialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <item name="colorPrimary">#efefef</item>
+        <item name="colorPrimaryVariant">#ffffff</item>
+<!--        <item name="colorOnPrimary">@color/your_on_primary_color</item>-->
+    </style>
+
 </resources>
