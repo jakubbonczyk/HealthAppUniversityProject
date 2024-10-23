@@ -2,7 +2,6 @@ package com.example.pamietajozdrowiu;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -25,12 +24,9 @@ public class HealtHistoryActivity extends AppCompatActivity {
         });
 
         Button button = findViewById(R.id.button4);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(HealtHistoryActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(HealtHistoryActivity.this, MainActivity.class);
+            startActivity(intent);
         });
     }
 }

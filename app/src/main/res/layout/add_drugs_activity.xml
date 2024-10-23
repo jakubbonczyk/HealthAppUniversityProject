@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#101017"
-    tools:context=".YourDrugsActivity">
+    tools:context=".AddDrugsActivity">
 
     <TextView
         android:id="@+id/textView"
@@ -82,6 +82,7 @@
         android:text=""
         app:cornerRadius="100dp"
         app:icon="@drawable/left"
+        app:iconTint="@color/white"
         app:iconGravity="top"
         app:iconPadding="@dimen/icon_padding_large"
         app:iconSize="@dimen/icon_size_small"
@@ -204,6 +205,7 @@
         android:layout_height="wrap_content"
         android:text="Termin ważności"
         app:icon="@drawable/calendar"
+        android:textColor="@color/white"
         app:iconGravity="textEnd"
         app:iconPadding="@dimen/icon_padding_large"
         app:iconSize="@dimen/icon_size_small"
@@ -218,6 +220,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="Zrób zdjęcie opakowania"
+        android:textColor="@color/white"
         app:icon="@drawable/photo_camera"
         app:iconGravity="textEnd"
         app:iconPadding="@dimen/icon_padding_large"
@@ -233,6 +236,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="anuluj"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toStartOf="@+id/guideline21"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
@@ -243,10 +247,24 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="dodaj"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintStart_toStartOf="@+id/guideline14"
         app:layout_constraintTop_toTopOf="@+id/guideline12" />
+
+    <ImageView
+        android:id="@+id/detailDrugImageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/drug_image"
+        android:scaleType="centerCrop"
+        android:src="@drawable/transparent_picture"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
+        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toTopOf="@+id/guideline20" />
 
 
 

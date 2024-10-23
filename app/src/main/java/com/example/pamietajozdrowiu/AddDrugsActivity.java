@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,9 +21,11 @@ import java.util.Calendar;
 public class AddDrugsActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final String EXTRA_DRUG_IMAGE = "com.example.pamietajozdrowiu.EXTRA_DRUG_IMAGE";
     private Bitmap takenPhotoBitmap;
     private Button takePhotoButton;
     private Button addDateButton;
+    private ImageView drugImageView;
     private TextInputEditText drugNameEditText;
     private TextInputEditText pillsQuantityEditText;
     private Button addButton;
@@ -44,6 +47,7 @@ public class AddDrugsActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.button4);
         drugNameEditText = findViewById(R.id.drugNameEditText);
         pillsQuantityEditText = findViewById(R.id.pillsQuantityEditText);
+        drugImageView = findViewById(R.id.detailDrugImageView);
         addButton = findViewById(R.id.button12);
         cancelButton = findViewById(R.id.button11);
         takePhotoButton = findViewById(R.id.button10);
@@ -77,7 +81,9 @@ public class AddDrugsActivity extends AppCompatActivity {
             Bundle extras = data.getExtras();
             if (extras != null) {
                 takenPhotoBitmap = (Bitmap)extras.get("data");
-                if (takenPhotoBitmap == null) {
+                if (takenPhotoBitmap != null) {
+                    drugImageView.setImageBitmap(takenPhotoBitmap);
+                }   else {
                     Toast.makeText(this, "Błąd podczas pobierania zdjęcia", Toast.LENGTH_SHORT).show();
                 }
             }

@@ -39,6 +39,9 @@
             android:name=".AddDrugsActivity"
             android:exported="false" />
         <activity
+            android:name=".DrugDetailActivity"
+            android:exported="false"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

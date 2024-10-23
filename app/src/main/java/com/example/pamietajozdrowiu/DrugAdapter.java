@@ -2,6 +2,7 @@ package com.example.pamietajozdrowiu;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ public class DrugAdapter extends RecyclerView.Adapter<DrugAdapter.DrugViewHolder
     public DrugAdapter(List<Drug> drugList, Context context) {
         this.drugList = drugList;
         this.dbHelper = new DatabaseHelper(context);
+        this.context = context;
     }
 
     @NonNull
@@ -48,6 +50,16 @@ public class DrugAdapter extends RecyclerView.Adapter<DrugAdapter.DrugViewHolder
         }   else {
             holder.drugImageView.setImageResource(R.drawable.placeholder_image);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DrugDetailActivity.class);
+            intent.putExtra(DrugDetailActivity.EXTRA_DRUG_ID, drug.getId());
+            intent.putExtra(DrugDetailActivity.EXTRA_DRUG_NAME, drug.getName());
+            intent.putExtra(DrugDetailActivity.EXTRA_DRUG_PILLS_QUANTITY, drug.getPillsQuantity());
+            intent.putExtra(DrugDetailActivity.EXTRA_DRUG_EXPIRATION_DATE, drug.getExpirationDate());
+            intent.putExtra(DrugDetailActivity.EXTRA_DRUG_IMAGE, imageBlob);
+            context.startActivity(intent);
+        });
 
         // Dodanie obsługi długiego kliknięcia do usunięcia leku
         holder.itemView.setOnLongClickListener(v -> {

@@ -82,6 +82,7 @@
         android:text=""
         app:cornerRadius="100dp"
         app:icon="@drawable/left"
+        app:iconTint="@color/white"
         app:iconGravity="top"
         app:iconPadding="@dimen/icon_padding_large"
         app:iconSize="@dimen/icon_size_small"
