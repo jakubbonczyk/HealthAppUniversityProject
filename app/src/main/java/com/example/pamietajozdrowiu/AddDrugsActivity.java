@@ -121,7 +121,7 @@ public class AddDrugsActivity extends AppCompatActivity {
         statement.bindString(1, drugName);
         statement.bindLong(2, pillsQuantity);
         statement.bindString(3, expiryDate);
-        statement.bindBlob(3, imageBlob);
+        statement.bindBlob(4, imageBlob);
 
         long rowId = statement.executeInsert();
 

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3; // Zwiększenie wersji bazy danych
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -15,14 +15,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Tworzenie tabeli DRUGS
+        // Tworzenie tabeli DRUGS z IMAGE jako BLOB
         String createDrugsTable = "CREATE TABLE DRUGS (" +
-                "ID_DRUG INTEGER PRIMARY KEY, " +
+                "ID_DRUG INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "ID_USER INTEGER, " +
-                "NAME TEXT, " +
-                "PILLS_QUANTITY INTEGER, " +
-                "IMAGE BLOB, " +
-                "EXPIRATION_DATE TEXT, " +
+                "NAME TEXT NOT NULL, " +
+                "PILLS_QUANTITY INTEGER NOT NULL, " +
+                "IMAGE BLOB, " + // Kolumna IMAGE jako BLOB
+                "EXPIRATION_DATE TEXT NOT NULL, " +
                 "ID_SICKNESS INTEGER, " +
                 "FOREIGN KEY(ID_SICKNESS) REFERENCES SICKNESSES(ID_SICKNESS), " +
                 "FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)" +
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Tworzenie tabeli USER_FEELINGS
         String createUserFeelingsTable = "CREATE TABLE USER_FEELINGS (" +
                 "ID_USER_FEELINGS INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "NAME INTEGER NOT NULL, " +
+                "NAME TEXT NOT NULL, " + // NAME powinno być typu TEXT, nie INTEGER
                 "VALUE INTEGER NOT NULL, " +
                 "ID_USER INTEGER NOT NULL, " +
                 "FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)" +

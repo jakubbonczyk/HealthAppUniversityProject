@@ -15,12 +15,12 @@
         android:contentDescription="@string/drug_image"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/drugNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/pillsQuantityTextView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/drugNameTextView"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="#ffffff"
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/pillsQuantityTextView"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#d3d3d3"
@@ -43,7 +43,7 @@
 
     <TextView
         android:id="@+id/expirationDateTextView"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="#d3d3d3"
