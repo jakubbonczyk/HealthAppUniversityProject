@@ -2,11 +2,13 @@ package com.example.pamietajozdrowiu;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ public class DrugAdapter extends RecyclerView.Adapter<DrugAdapter.DrugViewHolder
 
     private List<Drug> drugList;
     private DatabaseHelper dbHelper;
+    private Context context;
 
     public DrugAdapter(List<Drug> drugList, Context context) {
         this.drugList = drugList;
@@ -37,6 +40,14 @@ public class DrugAdapter extends RecyclerView.Adapter<DrugAdapter.DrugViewHolder
         holder.nameTextView.setText(drug.getName());
         holder.pillsQuantityTextView.setText("Ilość: " + drug.getPillsQuantity());
         holder.expirationDateTextView.setText("Termin ważności: " + drug.getExpirationDate());
+        byte[] imageBlob = drug.getImageBlob();
+
+        if (imageBlob != null && imageBlob.length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBlob, 0, imageBlob.length);
+            holder.drugImageView.setImageBitmap(bitmap);
+        }   else {
+            holder.drugImageView.setImageResource(R.drawable.placeholder_image);
+        }
 
         // Dodanie obsługi długiego kliknięcia do usunięcia leku
         holder.itemView.setOnLongClickListener(v -> {
@@ -70,14 +81,16 @@ public class DrugAdapter extends RecyclerView.Adapter<DrugAdapter.DrugViewHolder
     }
 
     // ViewHolder dla elementów RecyclerView
-    static class DrugViewHolder extends RecyclerView.ViewHolder {
+    public static class DrugViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView, pillsQuantityTextView, expirationDateTextView;
+        ImageView drugImageView;
 
         public DrugViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.drugNameTextView);
             pillsQuantityTextView = itemView.findViewById(R.id.pillsQuantityTextView);
             expirationDateTextView = itemView.findViewById(R.id.expirationDateTextView);
+            drugImageView = itemView.findViewById(R.id.drugImageView);
         }
     }
 }

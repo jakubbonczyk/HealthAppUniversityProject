@@ -8,5 +8,6 @@
     <string name="notifications">POWIADOMIENIA</string>
     <string name="healthHistory">KARTOTEKA</string>
     <string name="feelings">TWOJE SAMOPOCZUCIE!</string>
+    <string name="drug_image">Zdjecie leku</string>
 
 </resources>

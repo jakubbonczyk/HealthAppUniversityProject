@@ -106,7 +106,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.95" />
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline14"
         android:layout_width="wrap_content"
@@ -134,13 +133,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/drugsRecyclerView"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline12"
         app:layout_constraintEnd_toStartOf="@+id/guideline15"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         android:padding="16dp" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

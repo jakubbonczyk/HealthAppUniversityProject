@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
@@ -64,13 +64,20 @@ public class YourDrugsActivity extends AppCompatActivity {
         drugList = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow("ID_DRUG"));
-                String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
-                int pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
-                String expirationDate = cursor.getString(cursor.getColumnIndexOrThrow("EXPIRATION_DATE"));
+                try {
 
-                Drug drug = new Drug(id, name, pillsQuantity, expirationDate);
-                drugList.add(drug);
+
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("ID_DRUG"));
+                    String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+                    int pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
+                    String expirationDate = cursor.getString(cursor.getColumnIndexOrThrow("EXPIRATION_DATE"));
+                    byte[] imageBlob = cursor.getBlob(cursor.getColumnIndexOrThrow("IMAGE"));
+
+                    Drug drug = new Drug(id, name, pillsQuantity, expirationDate, imageBlob);
+                    drugList.add(drug);
+                } catch (Exception e) {
+                    Log.e("DatabaseError", "Error reading drug data: ", e);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
