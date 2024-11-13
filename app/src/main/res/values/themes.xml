@@ -23,6 +23,12 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="CustomCalendarView" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textColorSecondary">#000</item>
+    </style>
+
     <style name="DialogTheme" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="colorPrimary">#efefef</item>
         <item name="colorPrimaryVariant">#ffffff</item>

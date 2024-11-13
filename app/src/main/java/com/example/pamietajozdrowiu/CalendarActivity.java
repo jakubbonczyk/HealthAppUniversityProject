@@ -1,15 +1,19 @@
 package com.example.pamietajozdrowiu;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,12 +50,25 @@ public class CalendarActivity extends AppCompatActivity {
         scheduledDrugs = new ArrayList<>();
         drugAdapter = new DrugAdapter(scheduledDrugs, this);
         scheduledDrugsRecyclerView.setAdapter(drugAdapter);
+        Button backButton = findViewById(R.id.button4);
+        Button editScheduleButton = findViewById(R.id.editScheduleButton);
+
 
         // Listener na CalendarView
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             String selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
             Log.d(TAG, "Selected date: " + selectedDate);
             loadDrugsForSelectedDay(selectedDate);
+        });
+
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
+
+        editScheduleButton.setOnClickListener(v -> {
+            Intent intent = new Intent(CalendarActivity.this, YourDrugsActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -92,7 +109,6 @@ public class CalendarActivity extends AppCompatActivity {
         drugAdapter.notifyDataSetChanged();
     }
 
-    // Metoda pomocnicza do pobrania dnia tygodnia dla daty
     private int getDayIntFromDate(String date) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -100,30 +116,15 @@ public class CalendarActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(parsedDate);
 
-            // Pobierz dzień tygodnia i dostosuj do naszego formatu
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-            switch (dayOfWeek) {
-                case Calendar.SUNDAY:
-                    return 7; // Niedziela jako 7
-                case Calendar.MONDAY:
-                    return 1; // Poniedziałek jako 1
-                case Calendar.TUESDAY:
-                    return 2;
-                case Calendar.WEDNESDAY:
-                    return 3;
-                case Calendar.THURSDAY:
-                    return 4;
-                case Calendar.FRIDAY:
-                    return 5;
-                case Calendar.SATURDAY:
-                    return 6; // Sobota jako 6
-                default:
-                    return -1; // W przypadku błędu
-            }
+            // Mapa do struktur, gdzie poniedziałek = 1, wtorek = 2, ..., niedziela = 7
+            return dayOfWeek;
+
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
         }
     }
+
 }

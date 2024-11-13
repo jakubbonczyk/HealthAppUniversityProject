@@ -101,7 +101,7 @@
             android:layout_marginTop="20dp"
             android:text="Zaktualizuj harmonogram"
             android:textColor="@color/white"
-            app:icon="@drawable/left"
+            app:icon="@drawable/save"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding_large"
             app:iconSize="@dimen/icon_size_small"

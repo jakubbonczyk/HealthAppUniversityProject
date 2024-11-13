@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PamietajOZdrowiu</string>
     <string name="app_caps_name">PAMIĘTAJ O ZDROWIU</string>
-    <string name="greetings">Cześć Olek! Jak się masz?</string>
+    <string name="greetings">Cześć! Jak się masz?</string>
     <string name="clickme">clickMe!</string>
     <string name="yourDrugs">TWOJE LEKI</string>
     <string name="calendar">HARMONOGRAM</string>
