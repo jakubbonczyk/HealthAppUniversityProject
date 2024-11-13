@@ -53,6 +53,64 @@
             android:textColor="#d3d3d3"
             android:textSize="18sp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Wybierz dni przypomnienia:"
+            android:textColor="#ffffff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <CheckBox android:id="@+id/checkbox_monday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pon" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_tuesday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wt" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_wednesday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Śr" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_thursday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Czw" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_friday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pt" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_saturday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Sob" android:textColor="#d3d3d3"/>
+            <CheckBox android:id="@+id/checkbox_sunday" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nd" android:textColor="#d3d3d3"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/select_reminder_time_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Wybierz godzinę przypomnienia"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:id="@+id/selected_time_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Wybrana godzina: --:--"
+            android:textColor="#d3d3d3"
+            android:textSize="16sp"
+            android:textAlignment="center"/>
+        <Button
+            android:id="@+id/save_schedule_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Zaktualizuj harmonogram"
+            android:textColor="@color/white"
+            app:icon="@drawable/left"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding_large"
+            app:iconSize="@dimen/icon_size_small"
+            app:iconTint="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/guideline19"
+            app:layout_constraintEnd_toStartOf="@+id/guideline15"
+            app:layout_constraintStart_toStartOf="@+id/guideline1"
+            app:layout_constraintTop_toTopOf="@+id/guideline18" />
+
         <Button
             android:id="@+id/button9"
             android:layout_width="match_parent"
@@ -70,7 +128,5 @@
             app:layout_constraintStart_toStartOf="@+id/guideline1"
             app:layout_constraintTop_toTopOf="@+id/guideline18" />
 
-
     </LinearLayout>
 </ScrollView>
-
