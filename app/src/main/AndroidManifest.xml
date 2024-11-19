@@ -47,6 +47,15 @@
         <activity
             android:name=".DrugDetailActivity"
             android:exported="false"/>
+
+        <activity
+            android:name=".MedicationIntakeDetailActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".MedicationIntakeActivity"
+            android:exported="false"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

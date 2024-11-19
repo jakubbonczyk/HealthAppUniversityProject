@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 8; // Zwiększenie wersji bazy danych
+    private static final int DATABASE_VERSION = 10; // Zwiększenie wersji bazy danych
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,9 +46,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "ID_NOTIFICATION_SCHEDULE INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "ID_DRUG INTEGER NOT NULL, " +
                 "FREQUENCY INTEGER NOT NULL, " +
-                "REMINDER_TIME INTEGER, " +
+                "REMINDER_TIME TEXT, " +
                 "START_DATE INTEGER, " +
                 "END_DATE INTEGER, " +
+                "IS_TAKEN INTEGER DEFAULT 0, " + // Dodane pole
                 "FOREIGN KEY(ID_DRUG) REFERENCES DRUGS(ID_DRUG)" +
                 ")";
         db.execSQL(createNotificationScheduleTable);
@@ -95,14 +96,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Aktualizacja bazy danych - usuwanie starych tabel i tworzenie nowych
-        db.execSQL("DROP TABLE IF EXISTS DRUGS_RAPORT_LOG");
-        db.execSQL("DROP TABLE IF EXISTS NOTIFICATION_SCHEDULE");
-        db.execSQL("DROP TABLE IF EXISTS DRUGS");
-        db.execSQL("DROP TABLE IF EXISTS SICKNESSES");
-        db.execSQL("DROP TABLE IF EXISTS USERS");
-        db.execSQL("DROP TABLE IF EXISTS USER_FEELINGS");
-        db.execSQL("DROP TABLE IF EXISTS USER_NOTIFICATIONS");
-        onCreate(db);
+        if (oldVersion < newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS DRUGS_RAPORT_LOG");
+            db.execSQL("DROP TABLE IF EXISTS NOTIFICATION_SCHEDULE");
+            db.execSQL("DROP TABLE IF EXISTS DRUGS");
+            db.execSQL("DROP TABLE IF EXISTS SICKNESSES");
+            db.execSQL("DROP TABLE IF EXISTS USERS");
+            db.execSQL("DROP TABLE IF EXISTS USER_FEELINGS");
+            db.execSQL("DROP TABLE IF EXISTS USER_NOTIFICATIONS");
+            onCreate(db);
+        }
     }
+
 }

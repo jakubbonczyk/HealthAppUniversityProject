@@ -39,7 +39,7 @@
         android:layout_height="0dp"
         android:paddingTop="@dimen/button_padding_top"
         android:paddingBottom="@dimen/button_padding_bottom"
-        android:text="@string/notifications"
+        android:text="Przyjęcia leków"
         android:textAlignment="center"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintDimensionRatio="1:1"

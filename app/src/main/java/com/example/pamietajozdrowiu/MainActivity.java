@@ -40,11 +40,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        Button notificationsButton = findViewById(R.id.button);
-        notificationsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, NotificationsActivity.class);
+        Button medicationsIntakeButton = findViewById(R.id.button);
+        medicationsIntakeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, MedicationIntakeActivity.class);
             startActivity(intent);
         });
+
 
         Button healthHistoryButton = findViewById(R.id.button2);
         healthHistoryButton.setOnClickListener(v -> {
