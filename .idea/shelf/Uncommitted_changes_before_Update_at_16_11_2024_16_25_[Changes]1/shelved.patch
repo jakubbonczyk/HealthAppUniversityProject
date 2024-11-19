@@ -1,0 +1,352 @@
+Index: app/src/main/res/layout/calendar.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/main\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\"\r\n    android:background=\"#101017\"\r\n    tools:context=\".YourDrugsActivity\">\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"0dp\"\r\n        android:fontFamily=\"@font/montserrat_black\"\r\n        android:text=\"Twój harmonogram!\"\r\n        android:textColor=\"#ffffff\"\r\n        android:textSize=\"20sp\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/guideline6\"\r\n        app:layout_constraintEnd_toEndOf=\"parent\"\r\n        app:layout_constraintHorizontal_bias=\"0.083\"\r\n        app:layout_constraintStart_toStartOf=\"@+id/guideline7\"\r\n        app:layout_constraintTop_toTopOf=\"@+id/guideline5\"\r\n        app:layout_constraintVertical_bias=\"0.5\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.10\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline2\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.04\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline5\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.05\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline6\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.09\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline1\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\"\r\n        app:layout_constraintGuide_percent=\"0.05\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline3\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\"\r\n        app:layout_constraintGuide_percent=\"0.15\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline7\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\"\r\n        app:layout_constraintGuide_percent=\"0.2\" />\r\n\r\n    <com.google.android.material.button.MaterialButton\r\n        android:id=\"@+id/button4\"\r\n        style=\"@style/Widget.BackButton\"\r\n        android:layout_width=\"0dp\"\r\n        android:layout_height=\"0dp\"\r\n        android:paddingTop=\"8dp\"\r\n        android:paddingBottom=\"8dp\"\r\n        android:text=\"\"\r\n        app:cornerRadius=\"100dp\"\r\n        app:icon=\"@drawable/left\"\r\n        app:iconTint=\"@color/white\"\r\n        app:iconGravity=\"top\"\r\n        app:iconPadding=\"@dimen/icon_padding_large\"\r\n        app:iconSize=\"@dimen/icon_size_small\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/guideline\"\r\n        app:layout_constraintEnd_toStartOf=\"@+id/guideline3\"\r\n        app:layout_constraintStart_toStartOf=\"@+id/guideline1\"\r\n        app:layout_constraintTop_toTopOf=\"@+id/guideline2\"\r\n        app:strokeWidth=\"0dp\"\r\n        tools:ignore=\"MissingConstraints\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline12\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.85\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline13\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.95\" />\r\n\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline14\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\"\r\n        app:layout_constraintGuide_percent=\"0.75\" />\r\n\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline15\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\"\r\n        app:layout_constraintGuide_percent=\"0.95\" />\r\n\r\n    <com.google.android.material.floatingactionbutton.FloatingActionButton\r\n        android:id=\"@+id/floatingActionButton\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:clickable=\"true\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/guideline13\"\r\n        app:layout_constraintEnd_toStartOf=\"@+id/guideline15\"\r\n        app:layout_constraintStart_toStartOf=\"@+id/guideline14\"\r\n        app:layout_constraintTop_toTopOf=\"@+id/guideline12\"\r\n        app:srcCompat=\"@android:drawable/ic_input_add\" />\r\n    <androidx.constraintlayout.widget.Guideline\r\n        android:id=\"@+id/guideline16\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"horizontal\"\r\n        app:layout_constraintGuide_percent=\"0.60\" />\r\n    <CalendarView\r\n        android:id=\"@+id/calendarView\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:background=\"@drawable/rounded_background\"\r\n        app:layout_constraintBottom_toTopOf=\"@+id/guideline16\"\r\n        app:layout_constraintEnd_toStartOf=\"@+id/guideline15\"\r\n        app:layout_constraintStart_toStartOf=\"@+id/guideline1\"\r\n        app:layout_constraintTop_toTopOf=\"@+id/guideline\" />\r\n\r\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/calendar.xml b/app/src/main/res/layout/calendar.xml
+--- a/app/src/main/res/layout/calendar.xml	
++++ b/app/src/main/res/layout/calendar.xml	
+@@ -1,41 +1,14 @@
++<!-- res/layout/calendar.xml -->
+ <?xml version="1.0" encoding="utf-8"?>
+-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
++<androidx.constraintlayout.widget.ConstraintLayout
++    xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:id="@+id/main"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:background="#101017"
+-    tools:context=".YourDrugsActivity">
+-
+-    <TextView
+-        android:id="@+id/textView"
+-        android:layout_width="0dp"
+-        android:layout_height="0dp"
+-        android:fontFamily="@font/montserrat_black"
+-        android:text="Twój harmonogram!"
+-        android:textColor="#ffffff"
+-        android:textSize="20sp"
+-        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHorizontal_bias="0.083"
+-        app:layout_constraintStart_toStartOf="@+id/guideline7"
+-        app:layout_constraintTop_toTopOf="@+id/guideline5"
+-        app:layout_constraintVertical_bias="0.5" />
+-
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.10" />
+-
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline2"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.04" />
++    tools:context=".CalendarActivity">
+ 
+     <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/guideline5"
+@@ -49,14 +22,14 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.09" />
++        app:layout_constraintGuide_percent="0.13" />
+ 
+     <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline1"
++        android:id="@+id/guideline7"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:orientation="vertical"
+-        app:layout_constraintGuide_percent="0.05" />
++        android:orientation="horizontal"
++        app:layout_constraintGuide_percent="0.18" />
+ 
+     <androidx.constraintlayout.widget.Guideline
+         android:id="@+id/guideline3"
+@@ -66,86 +39,114 @@
+         app:layout_constraintGuide_percent="0.15" />
+ 
+     <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline7"
++        android:id="@+id/guideline1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+-        app:layout_constraintGuide_percent="0.2" />
++        app:layout_constraintGuide_percent="0.05" />
+ 
+     <com.google.android.material.button.MaterialButton
+         android:id="@+id/button4"
+         style="@style/Widget.BackButton"
+         android:layout_width="0dp"
+         android:layout_height="0dp"
+-        android:paddingTop="8dp"
+-        android:paddingBottom="8dp"
+         android:text=""
+         app:cornerRadius="100dp"
+         app:icon="@drawable/left"
+-        app:iconTint="@color/white"
+         app:iconGravity="top"
+         app:iconPadding="@dimen/icon_padding_large"
+         app:iconSize="@dimen/icon_size_small"
+-        app:layout_constraintBottom_toTopOf="@+id/guideline"
++        app:iconTint="@color/white"
++        app:layout_constraintBottom_toTopOf="@+id/guideline6"
+         app:layout_constraintEnd_toStartOf="@+id/guideline3"
+         app:layout_constraintStart_toStartOf="@+id/guideline1"
+-        app:layout_constraintTop_toTopOf="@+id/guideline2"
++        app:layout_constraintTop_toTopOf="@+id/guideline5"
+         app:strokeWidth="0dp"
+         tools:ignore="MissingConstraints" />
+ 
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline12"
+-        android:layout_width="wrap_content"
++    <TextView
++        android:id="@+id/calendarTitleTextView"
++        android:layout_width="0dp"
+         android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.85" />
++        android:text="Harmonogram"
++        android:textColor="#ffffff"
++        android:textSize="20sp"
++        android:textStyle="bold"
++        android:textAlignment="textStart"
++        android:paddingLeft="10dp"
++        app:layout_constraintBottom_toTopOf="@+id/guideline6"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="@+id/guideline3"
++        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+ 
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline13"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.95" />
++    <!-- Spinner do wyboru leku -->
++    <com.google.android.material.textfield.TextInputLayout
++        android:id="@+id/drugSpinnerLayout"
++        android:layout_width="350dp"
++        android:layout_height="0dp"
++        android:hint="Wybierz lek"
++        app:layout_constraintBottom_toTopOf="@+id/guideline7"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toTopOf="@+id/guideline6">
++
++        <AutoCompleteTextView
++            android:id="@+id/drugSpinner"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:inputType="none" />
++    </com.google.android.material.textfield.TextInputLayout>
+ 
+-
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline14"
+-        android:layout_width="wrap_content"
++    <!-- Spinner do wyboru częstotliwości -->
++    <com.google.android.material.textfield.TextInputLayout
++        android:id="@+id/frequencySpinnerLayout"
++        android:layout_width="350dp"
+         android:layout_height="wrap_content"
+-        android:orientation="vertical"
+-        app:layout_constraintGuide_percent="0.75" />
++        android:hint="Częstotliwość"
++        app:layout_constraintTop_toBottomOf="@id/drugSpinnerLayout"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        android:layout_marginTop="16dp">
+ 
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline15"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:orientation="vertical"
+-        app:layout_constraintGuide_percent="0.95" />
++        <AutoCompleteTextView
++            android:id="@+id/frequencySpinner"
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:inputType="none"/>
++    </com.google.android.material.textfield.TextInputLayout>
+ 
+-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+-        android:id="@+id/floatingActionButton"
+-        android:layout_width="wrap_content"
++    <!-- Przycisk do ustawiania godzin przypomnień -->
++    <Button
++        android:id="@+id/buttonSetReminders"
++        android:layout_width="350dp"
+         android:layout_height="wrap_content"
+-        android:clickable="true"
+-        app:layout_constraintBottom_toTopOf="@+id/guideline13"
+-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+-        app:layout_constraintStart_toStartOf="@+id/guideline14"
+-        app:layout_constraintTop_toTopOf="@+id/guideline12"
+-        app:srcCompat="@android:drawable/ic_input_add" />
+-    <androidx.constraintlayout.widget.Guideline
+-        android:id="@+id/guideline16"
+-        android:layout_width="wrap_content"
++        android:text="Ustaw godziny przypomnień"
++        app:layout_constraintTop_toBottomOf="@id/frequencySpinnerLayout"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        android:layout_marginTop="16dp" />
++
++    <!-- RecyclerView do wyświetlania ustawionych przypomnień -->
++    <androidx.recyclerview.widget.RecyclerView
++        android:id="@+id/remindersRecyclerView"
++        android:layout_width="0dp"
++        android:layout_height="0dp"
++        app:layout_constraintTop_toBottomOf="@id/buttonSetReminders"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintBottom_toTopOf="@+id/buttonAddSchedule"
++        android:padding="16dp"/>
++
++    <!-- Przycisk do dodania harmonogramu -->
++    <Button
++        android:id="@+id/buttonAddSchedule"
++        android:layout_width="350dp"
+         android:layout_height="wrap_content"
+-        android:orientation="horizontal"
+-        app:layout_constraintGuide_percent="0.60" />
+-    <CalendarView
+-        android:id="@+id/calendarView"
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:background="@drawable/rounded_background"
+-        app:layout_constraintBottom_toTopOf="@+id/guideline16"
+-        app:layout_constraintEnd_toStartOf="@+id/guideline15"
+-        app:layout_constraintStart_toStartOf="@+id/guideline1"
+-        app:layout_constraintTop_toTopOf="@+id/guideline" />
++        android:text="Dodaj Harmonogram"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintEnd_toEndOf="parent"
++        android:layout_marginBottom="16dp" />
+ 
+-</androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
++
++</androidx.constraintlayout.widget.ConstraintLayout>
+Index: app/src/main/java/com/example/pamietajozdrowiu/DatabaseHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.pamietajozdrowiu;\r\n\r\nimport android.content.Context;\r\nimport android.database.sqlite.SQLiteDatabase;\r\nimport android.database.sqlite.SQLiteOpenHelper;\r\n\r\npublic class DatabaseHelper extends SQLiteOpenHelper {\r\n\r\n    private static final String DATABASE_NAME = \"android_database.db\";\r\n    private static final int DATABASE_VERSION = 3; // Zwiększenie wersji bazy danych\r\n\r\n    public DatabaseHelper(Context context) {\r\n        super(context, DATABASE_NAME, null, DATABASE_VERSION);\r\n    }\r\n\r\n    @Override\r\n    public void onCreate(SQLiteDatabase db) {\r\n        // Tworzenie tabeli DRUGS z IMAGE jako BLOB\r\n        String createDrugsTable = \"CREATE TABLE DRUGS (\" +\r\n                \"ID_DRUG INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"ID_USER INTEGER, \" +\r\n                \"NAME TEXT NOT NULL, \" +\r\n                \"PILLS_QUANTITY INTEGER NOT NULL, \" +\r\n                \"IMAGE BLOB, \" + // Kolumna IMAGE jako BLOB\r\n                \"EXPIRATION_DATE TEXT NOT NULL, \" +\r\n                \"ID_SICKNESS INTEGER, \" +\r\n                \"FOREIGN KEY(ID_SICKNESS) REFERENCES SICKNESSES(ID_SICKNESS), \" +\r\n                \"FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)\" +\r\n                \")\";\r\n        db.execSQL(createDrugsTable);\r\n\r\n        // Tworzenie tabeli DRUGS_RAPORT_LOG\r\n        String createDrugsRaportLogTable = \"CREATE TABLE DRUGS_RAPORT_LOG (\" +\r\n                \"ID_DRUG_RAPORT_LOG INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"ID_DRUG INTEGER NOT NULL, \" +\r\n                \"ID_USER INTEGER NOT NULL, \" +\r\n                \"QUANTITY_TAKEN INTEGER NOT NULL, \" +\r\n                \"DATE_OF_TAKING TEXT NOT NULL, \" +\r\n                \"FOREIGN KEY(ID_DRUG) REFERENCES DRUGS(ID_DRUG), \" +\r\n                \"FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)\" +\r\n                \")\";\r\n        db.execSQL(createDrugsRaportLogTable);\r\n\r\n        // Tworzenie tabeli NOTIFICATION_SCHEDULE\r\n        String createNotificationScheduleTable = \"CREATE TABLE NOTIFICATION_SCHEDULE (\" +\r\n                \"ID_NOTIFICATION_SCHEDULE INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"ID_DRUG INTEGER NOT NULL, \" +\r\n                \"FREQUENCY INTEGER NOT NULL, \" +\r\n                \"REMINDER_TIME INTEGER, \" +\r\n                \"START_DATE INTEGER, \" +\r\n                \"END_DATE INTEGER, \" +\r\n                \"FOREIGN KEY(ID_DRUG) REFERENCES DRUGS(ID_DRUG)\" +\r\n                \")\";\r\n        db.execSQL(createNotificationScheduleTable);\r\n\r\n        // Tworzenie tabeli SICKNESSES\r\n        String createSicknessesTable = \"CREATE TABLE SICKNESSES (\" +\r\n                \"ID_SICKNESS INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"NAME TEXT NOT NULL\" +\r\n                \")\";\r\n        db.execSQL(createSicknessesTable);\r\n\r\n        // Tworzenie tabeli USERS\r\n        String createUsersTable = \"CREATE TABLE USERS (\" +\r\n                \"ID_USER INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"FIRST_NAME TEXT NOT NULL, \" +\r\n                \"SECOND_NAME TEXT NOT NULL, \" +\r\n                \"AGE INTEGER NOT NULL, \" +\r\n                \"DATE_OF_BIRTH TEXT NOT NULL\" +\r\n                \")\";\r\n        db.execSQL(createUsersTable);\r\n\r\n        // Tworzenie tabeli USER_FEELINGS\r\n        String createUserFeelingsTable = \"CREATE TABLE USER_FEELINGS (\" +\r\n                \"ID_USER_FEELINGS INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"NAME TEXT NOT NULL, \" + // NAME powinno być typu TEXT, nie INTEGER\r\n                \"VALUE INTEGER NOT NULL, \" +\r\n                \"ID_USER INTEGER NOT NULL, \" +\r\n                \"FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)\" +\r\n                \")\";\r\n        db.execSQL(createUserFeelingsTable);\r\n\r\n        // Tworzenie tabeli USER_NOTIFICATIONS\r\n        String createUserNotificationsTable = \"CREATE TABLE USER_NOTIFICATIONS (\" +\r\n                \"ID_USER_NOTIFICATION INTEGER PRIMARY KEY AUTOINCREMENT, \" +\r\n                \"ID_USER INTEGER NOT NULL, \" +\r\n                \"ID_NOTIFICATION_SCHEDULE INTEGER NOT NULL, \" +\r\n                \"NOTIFICATION_STATUS INTEGER, \" +\r\n                \"LAST_NOTIFIED TEXT, \" +\r\n                \"FOREIGN KEY(ID_NOTIFICATION_SCHEDULE) REFERENCES NOTIFICATION_SCHEDULE(ID_NOTIFICATION_SCHEDULE), \" +\r\n                \"FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)\" +\r\n                \")\";\r\n        db.execSQL(createUserNotificationsTable);\r\n    }\r\n\r\n    @Override\r\n    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {\r\n        // Aktualizacja bazy danych - usuwanie starych tabel i tworzenie nowych\r\n        db.execSQL(\"DROP TABLE IF EXISTS DRUGS_RAPORT_LOG\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS NOTIFICATION_SCHEDULE\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS DRUGS\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS SICKNESSES\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS USERS\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS USER_FEELINGS\");\r\n        db.execSQL(\"DROP TABLE IF EXISTS USER_NOTIFICATIONS\");\r\n        onCreate(db);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/pamietajozdrowiu/DatabaseHelper.java b/app/src/main/java/com/example/pamietajozdrowiu/DatabaseHelper.java
+--- a/app/src/main/java/com/example/pamietajozdrowiu/DatabaseHelper.java	
++++ b/app/src/main/java/com/example/pamietajozdrowiu/DatabaseHelper.java	
+@@ -1,8 +1,16 @@
+ package com.example.pamietajozdrowiu;
+ 
++import android.app.appsearch.RemoveByDocumentIdRequest;
++import android.content.ContentValues;
+ import android.content.Context;
++import android.database.Cursor;
+ import android.database.sqlite.SQLiteDatabase;
+ import android.database.sqlite.SQLiteOpenHelper;
++import android.provider.CalendarContract;
++import android.util.Log;
++
++import java.util.ArrayList;
++import java.util.List;
+ 
+ public class DatabaseHelper extends SQLiteOpenHelper {
+ 
+@@ -105,4 +113,51 @@
+         db.execSQL("DROP TABLE IF EXISTS USER_NOTIFICATIONS");
+         onCreate(db);
+     }
++
++    public List<Drug> getAllDrugs() {
++        List<Drug> drugs = new ArrayList<>();
++        SQLiteDatabase db = this.getReadableDatabase();
++        Cursor cursor = db.rawQuery("SELECT * FROM DRUGS", null);
++
++        if (cursor.moveToFirst()) {
++            do {
++                try {
++                    int id = cursor.getInt(cursor.getColumnIndexOrThrow("ID_DRUG"));
++                    String name = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
++                    int pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
++                    String expirationDate = cursor.getString(cursor.getColumnIndexOrThrow("EXPIRATION_DATE"));
++                    byte[] imageBlob = cursor.getBlob(cursor.getColumnIndexOrThrow("IMAGE"));
++
++                    Drug drug = new Drug(id, name, pillsQuantity, expirationDate, imageBlob);
++                    drugs.add(drug);
++                }   catch (Exception e) {
++                    Log.e("DatabaseError", "Error reading drug data", e);
++                }
++            }   while (cursor.moveToNext());
++        }
++        cursor.close();
++        return drugs;
++    }
++    public void addNotificationSchedule(int drugId, int frequency, List<ReminderTime> reminderTimes, long startDate, Long endDate) {
++        SQLiteDatabase db = this.getWritableDatabase();
++        ContentValues values = new ContentValues();
++        values.put("ID_DRUG", drugId);
++        values.put("FREQUENCY", frequency);
++        values.put("START_DATE", startDate);
++        if (endDate != null) {
++            values.put("END_DATE", endDate);
++        }
++
++        long scheduleId = db.insert("NOTIFICATION_SCHEDULE", null, values);
++
++        if (scheduleId != -1 && reminderTimes != null) {
++            for (ReminderTime time : reminderTimes) {
++                ContentValues timeValues = new ContentValues();
++                timeValues.put("ID_NOTIFICATION_SCHEDULE", scheduleId);
++                timeValues.put("REMINDER_HOUR", time.getHour());
++                timeValues.put("REMINDER_MINUTE", time.getMinute());
++                db.insert("REMINDER_TIMES", null, timeValues);
++            }
++        }
++    }
+ }
+Index: app/src/main/java/com/example/pamietajozdrowiu/ReminderTime.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/pamietajozdrowiu/ReminderTime.java b/app/src/main/java/com/example/pamietajozdrowiu/ReminderTime.java
+new file mode 100644
+--- /dev/null	
++++ b/app/src/main/java/com/example/pamietajozdrowiu/ReminderTime.java	
+@@ -0,0 +1,18 @@
++package com.example.pamietajozdrowiu;
++
++public class ReminderTime {
++    private int hour;
++    private int minute;
++
++    public ReminderTime(int hour, int minute) {
++        this.hour = hour;
++        this.minute = minute;
++    }
++
++    public int getHour() {
++        return hour;
++    }
++    public int getMinute() {
++        return minute;
++    }
++}
