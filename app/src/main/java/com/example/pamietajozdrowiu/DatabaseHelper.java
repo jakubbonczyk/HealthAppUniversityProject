@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 10; // Zwiększenie wersji bazy danych
+    private static final int DATABASE_VERSION = 13; // Zwiększenie wersji bazy danych
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,14 +42,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createDrugsRaportLogTable);
 
         // Tworzenie tabeli NOTIFICATION_SCHEDULE
-        String createNotificationScheduleTable = "CREATE TABLE NOTIFICATION_SCHEDULE (" +
+        String createNotificationScheduleTable = "CREATE TABLE IF NOT EXISTS NOTIFICATION_SCHEDULE (" +
                 "ID_NOTIFICATION_SCHEDULE INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "ID_DRUG INTEGER NOT NULL, " +
-                "FREQUENCY INTEGER NOT NULL, " +
+                "FREQUENCY INTEGER, " +
                 "REMINDER_TIME TEXT, " +
-                "START_DATE INTEGER, " +
-                "END_DATE INTEGER, " +
-                "IS_TAKEN INTEGER DEFAULT 0, " + // Dodane pole
+                "START_DATE TEXT, " +
+                "IS_TAKEN INTEGER DEFAULT 0, " +
+                "DATE TEXT, " + // Upewnij się, że kolumna DATE jest tutaj dodana
                 "FOREIGN KEY(ID_DRUG) REFERENCES DRUGS(ID_DRUG)" +
                 ")";
         db.execSQL(createNotificationScheduleTable);
@@ -107,5 +107,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             onCreate(db);
         }
     }
+
 
 }

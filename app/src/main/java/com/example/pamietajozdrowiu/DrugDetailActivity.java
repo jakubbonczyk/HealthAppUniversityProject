@@ -6,9 +6,12 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -19,15 +22,17 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationManagerCompat;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DrugDetailActivity extends AppCompatActivity {
 
@@ -162,53 +167,96 @@ public class DrugDetailActivity extends AppCompatActivity {
             return;
         }
 
+        // Usuń istniejące powiadomienia dla tego leku
         db.delete("NOTIFICATION_SCHEDULE", "ID_DRUG=?", new String[]{String.valueOf(drugId)});
 
-        for (int day : selectedDays) {
-            String insertQuery = "INSERT INTO NOTIFICATION_SCHEDULE (ID_DRUG, FREQUENCY, REMINDER_TIME, START_DATE) VALUES (?, ?, ?, ?)";
-            db.execSQL(insertQuery, new Object[]{drugId, day, selectedTime, getCurrentDate()});
+        // Pobierz datę ważności leku
+        String expirationDateStr = getDrugExpirationDate(drugId);
+        if (expirationDateStr == null) {
+            Toast.makeText(this, "Nie można pobrać daty ważności leku.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar startDate = Calendar.getInstance();
+        Calendar endDate = Calendar.getInstance();
+
+        try {
+            endDate.setTime(dateFormat.parse(expirationDateStr));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Błąd parsowania daty ważności.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Iteruj przez wszystkie dni od dzisiaj do daty ważności
+        while (!startDate.after(endDate)) {
+            int dayOfWeek = startDate.get(Calendar.DAY_OF_WEEK);
+            int adjustedDayOfWeek = (dayOfWeek == Calendar.SUNDAY) ? 7 : dayOfWeek - 1; // Poniedziałek = 1, ..., Niedziela = 7
+
+            if (selectedDays.contains(adjustedDayOfWeek)) {
+                String dateStr = dateFormat.format(startDate.getTime());
+
+                ContentValues values = new ContentValues();
+                values.put("ID_DRUG", drugId);
+                values.put("DATE", dateStr);
+                values.put("REMINDER_TIME", selectedTime);
+                values.put("IS_TAKEN", 0);
+
+                db.insert("NOTIFICATION_SCHEDULE", null, values);
+            }
+
+            startDate.add(Calendar.DAY_OF_MONTH, 1);
+        }
+
         Toast.makeText(this, "Harmonogram zapisany pomyślnie!", Toast.LENGTH_SHORT).show();
+
+        // Ustawienie przypomnień
+        setMedicationReminders();
     }
+
 
     @SuppressLint("ScheduleExactAlarm")
     private void setMedicationReminders() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        for (int dayOfWeek : selectedDays) {
-            Calendar calendar = Calendar.getInstance();
-            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int drugId = getIntent().getIntExtra(EXTRA_DRUG_ID, -1);
 
-            // Korekcja, aby dni odpowiadały strukturze `Calendar.DAY_OF_WEEK`
-            int daysUntilReminder = (dayOfWeek - currentDay + 7) % 7;
-            if (daysUntilReminder == 0 && calendar.getTimeInMillis() > System.currentTimeMillis()) {
-                daysUntilReminder += 7;
-            }
-            calendar.add(Calendar.DAY_OF_YEAR, daysUntilReminder);
+        Cursor cursor = db.rawQuery("SELECT ID_NOTIFICATION_SCHEDULE, DATE, REMINDER_TIME FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG=?", new String[]{String.valueOf(drugId)});
 
-            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(selectedTime.split(":")[0]));
-            calendar.set(Calendar.MINUTE, Integer.parseInt(selectedTime.split(":")[1]));
-            calendar.set(Calendar.SECOND, 0);
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
-            Log.d("DrugDetailActivity", "Ustawianie alarmu na dzień: " + dayOfWeek + " godzina: " + selectedTime + " (data: " + calendar.getTime() + ")");
+        if (cursor.moveToFirst()) {
+            do {
+                int notificationId = cursor.getInt(cursor.getColumnIndexOrThrow("ID_NOTIFICATION_SCHEDULE"));
+                String dateStr = cursor.getString(cursor.getColumnIndexOrThrow("DATE"));
+                String timeStr = cursor.getString(cursor.getColumnIndexOrThrow("REMINDER_TIME"));
 
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra("drug_name", nameTextView.getText().toString());
-            intent.putExtra("reminder_time", selectedTime);
+                Date notificationDateTime = null;
+                try {
+                    notificationDateTime = dateTimeFormat.parse(dateStr + " " + timeStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    continue;
+                }
 
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, dayOfWeek, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                if (notificationDateTime != null && notificationDateTime.getTime() > System.currentTimeMillis()) {
+                    Intent intent = new Intent(this, NotificationReceiver.class);
+                    intent.putExtra("drug_name", nameTextView.getText().toString());
+                    intent.putExtra("reminder_time", timeStr);
 
-            if (pendingIntent != null) {
-                Log.d("DrugDetailActivity", "PendingIntent utworzony poprawnie.");
-            } else {
-                Log.e("DrugDetailActivity", "Błąd przy tworzeniu PendingIntent.");
-            }
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, notificationId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notificationDateTime.getTime(), pendingIntent);
 
-            Log.d("DrugDetailActivity", "Alarm ustawiony: " + calendar.getTimeInMillis());
+                    Log.d("DrugDetailActivity", "Alarm ustawiony na: " + notificationDateTime.toString());
+                }
+
+            } while (cursor.moveToNext());
         }
+        cursor.close();
     }
+
 
 
     private void loadScheduleFromDatabase(CheckBox mondayCheckbox, CheckBox tuesdayCheckbox, CheckBox wednesdayCheckbox,
@@ -217,7 +265,7 @@ public class DrugDetailActivity extends AppCompatActivity {
         int drugId = getIntent().getIntExtra(EXTRA_DRUG_ID, -1);
 
         if (drugId != -1) {
-            Cursor cursor = db.rawQuery("SELECT FREQUENCY, REMINDER_TIME FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG=?", new String[]{String.valueOf(drugId)});
+            Cursor cursor = db.rawQuery("SELECT DISTINCT FREQUENCY, REMINDER_TIME FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG=?", new String[]{String.valueOf(drugId)});
 
             if (cursor.moveToFirst()) {
                 do {
@@ -225,23 +273,26 @@ public class DrugDetailActivity extends AppCompatActivity {
                     String reminderTime = cursor.getString(cursor.getColumnIndexOrThrow("REMINDER_TIME"));
 
                     switch (frequency) {
-                        case Calendar.MONDAY: mondayCheckbox.setChecked(true); break;
-                        case Calendar.TUESDAY: tuesdayCheckbox.setChecked(true); break;
-                        case Calendar.WEDNESDAY: wednesdayCheckbox.setChecked(true); break;
-                        case Calendar.THURSDAY: thursdayCheckbox.setChecked(true); break;
-                        case Calendar.FRIDAY: fridayCheckbox.setChecked(true); break;
-                        case Calendar.SATURDAY: saturdayCheckbox.setChecked(true); break;
-                        case Calendar.SUNDAY: sundayCheckbox.setChecked(true); break;
+                        case 1: mondayCheckbox.setChecked(true); break;
+                        case 2: tuesdayCheckbox.setChecked(true); break;
+                        case 3: wednesdayCheckbox.setChecked(true); break;
+                        case 4: thursdayCheckbox.setChecked(true); break;
+                        case 5: fridayCheckbox.setChecked(true); break;
+                        case 6: saturdayCheckbox.setChecked(true); break;
+                        case 7: sundayCheckbox.setChecked(true); break;
                     }
 
-                    selectedTime = reminderTime;
-                    selectedTimeTextView.setText("Wybrana godzina: " + selectedTime);
+                    if (selectedTime.isEmpty()) {
+                        selectedTime = reminderTime;
+                        selectedTimeTextView.setText("Wybrana godzina: " + selectedTime);
+                    }
 
                 } while (cursor.moveToNext());
             }
             cursor.close();
         }
     }
+
 
     private String getCurrentDate() {
         Calendar calendar = Calendar.getInstance();
@@ -280,4 +331,17 @@ public class DrugDetailActivity extends AppCompatActivity {
             }
         }
     }
+
+    private String getDrugExpirationDate(int drugId) {
+        String expirationDate = null;
+
+        Cursor cursor = db.rawQuery("SELECT EXPIRATION_DATE FROM DRUGS WHERE ID_DRUG=?", new String[]{String.valueOf(drugId)});
+        if (cursor.moveToFirst()) {
+            expirationDate = cursor.getString(cursor.getColumnIndexOrThrow("EXPIRATION_DATE"));
+        }
+        cursor.close();
+
+        return expirationDate;
+    }
+
 }
