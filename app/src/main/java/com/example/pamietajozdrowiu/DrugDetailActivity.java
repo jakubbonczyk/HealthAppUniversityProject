@@ -140,19 +140,14 @@ public class DrugDetailActivity extends AppCompatActivity {
     }
 
     private void toggleDaySelection(int day, boolean isSelected) {
-        // Przesunięcie o jeden dzień w przód, aby MONDAY = 1, TUESDAY = 2, ..., SUNDAY = 7
-        int adjustedDay = (day == Calendar.SUNDAY) ? 7 : day;
-
         if (isSelected) {
-            if (!selectedDays.contains(adjustedDay)) {
-                selectedDays.add(adjustedDay);
+            if (!selectedDays.contains(day)) {
+                selectedDays.add(day);
             }
         } else {
-            selectedDays.remove(Integer.valueOf(adjustedDay));
+            selectedDays.remove(Integer.valueOf(day));
         }
     }
-
-
 
     private void saveScheduleToDatabase() {
         int drugId = getIntent().getIntExtra(EXTRA_DRUG_ID, -1);
@@ -175,41 +170,56 @@ public class DrugDetailActivity extends AppCompatActivity {
     private void setMedicationReminders() {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-        for (int dayOfWeek : selectedDays) {
-            Calendar calendar = Calendar.getInstance();
-            int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        int drugId = getIntent().getIntExtra(EXTRA_DRUG_ID, -1);
+        if (drugId == -1) {
+            Toast.makeText(this, "Błąd: brak ID leku.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            // Korekcja, aby dni odpowiadały strukturze `Calendar.DAY_OF_WEEK`
-            int daysUntilReminder = (dayOfWeek - currentDay + 7) % 7;
-            if (daysUntilReminder == 0 && calendar.getTimeInMillis() > System.currentTimeMillis()) {
-                daysUntilReminder += 7;
+        // Pobierz liczbę dostępnych tabletek z bazy danych
+        Cursor cursor = db.rawQuery("SELECT PILLS_QUANTITY FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
+        int pillsQuantity = 0;
+        if (cursor.moveToFirst()) {
+            pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
+        }
+        cursor.close();
+
+        int remindersSet = 0;
+        int weeksAhead = 0;
+
+        // Ustawianie powiadomień tylko do liczby dostępnych tabletek
+        while (remindersSet < pillsQuantity) {
+            for (int dayOfWeek : selectedDays) {
+                if (remindersSet >= pillsQuantity) break;
+
+                Calendar calendar = Calendar.getInstance();
+                int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                int daysUntilReminder = (dayOfWeek - currentDay + 7) % 7 + (weeksAhead * 7);
+                if (daysUntilReminder == 0 && calendar.getTimeInMillis() > System.currentTimeMillis()) {
+                    daysUntilReminder += 7;
+                }
+                calendar.add(Calendar.DAY_OF_YEAR, daysUntilReminder);
+
+                calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(selectedTime.split(":")[0]));
+                calendar.set(Calendar.MINUTE, Integer.parseInt(selectedTime.split(":")[1]));
+                calendar.set(Calendar.SECOND, 0);
+
+                Intent intent = new Intent(this, NotificationReceiver.class);
+                intent.putExtra("drug_name", nameTextView.getText().toString());
+                intent.putExtra("reminder_time", selectedTime);
+
+                int requestCode = drugId * 1000 + remindersSet;
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+                remindersSet++;
             }
-            calendar.add(Calendar.DAY_OF_YEAR, daysUntilReminder);
-
-            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(selectedTime.split(":")[0]));
-            calendar.set(Calendar.MINUTE, Integer.parseInt(selectedTime.split(":")[1]));
-            calendar.set(Calendar.SECOND, 0);
-
-            Log.d("DrugDetailActivity", "Ustawianie alarmu na dzień: " + dayOfWeek + " godzina: " + selectedTime + " (data: " + calendar.getTime() + ")");
-
-            Intent intent = new Intent(this, NotificationReceiver.class);
-            intent.putExtra("drug_name", nameTextView.getText().toString());
-            intent.putExtra("reminder_time", selectedTime);
-
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, dayOfWeek, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-            if (pendingIntent != null) {
-                Log.d("DrugDetailActivity", "PendingIntent utworzony poprawnie.");
-            } else {
-                Log.e("DrugDetailActivity", "Błąd przy tworzeniu PendingIntent.");
-            }
-
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-            Log.d("DrugDetailActivity", "Alarm ustawiony: " + calendar.getTimeInMillis());
+            weeksAhead++;
         }
     }
-
 
     private void loadScheduleFromDatabase(CheckBox mondayCheckbox, CheckBox tuesdayCheckbox, CheckBox wednesdayCheckbox,
                                           CheckBox thursdayCheckbox, CheckBox fridayCheckbox, CheckBox saturdayCheckbox,

@@ -1,6 +1,10 @@
 package com.example.pamietajozdrowiu;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -58,10 +62,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             } else if (currentDateTime.after(notificationDateTime)) {
                 // Czas powiadomienia minął - przycisk jest aktywny
                 holder.takeMedicationButton.setEnabled(true);
-                // Ustaw kolor przycisku (np. domyślny lub fioletowy)
-//                holder.takeMedicationButton.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
             } else {
-                // Czas powiadomienia jeszcze nie minął - przycisk jest nieaktywny lub ukryty
+                // Czas powiadomienia jeszcze nie minął - przycisk jest nieaktywny
                 holder.takeMedicationButton.setEnabled(false);
                 holder.takeMedicationButton.setBackgroundColor(Color.GRAY);
             }
@@ -84,11 +86,50 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             notification.setTaken(true);
             notifyItemChanged(position);
 
+            // Zaktualizuj zaplanowane przypomnienia
+            updateScheduledReminders(notification.getDrugId());
+
             // Wyświetl Toast
             Toast.makeText(context, "Zapisano przyjęcie leku", Toast.LENGTH_SHORT).show();
         });
     }
 
+    private void updateScheduledReminders(int drugId) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Pobierz aktualną liczbę tabletek
+        Cursor cursor = db.rawQuery("SELECT PILLS_QUANTITY FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
+        int pillsQuantity = 0;
+        if (cursor.moveToFirst()) {
+            pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
+        }
+        cursor.close();
+
+        // Pobierz wszystkie przyszłe powiadomienia dla tego leku
+        Cursor notificationCursor = db.rawQuery("SELECT ID_NOTIFICATION_SCHEDULE FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG = ? AND IS_TAKEN = 0 ORDER BY ID_NOTIFICATION_SCHEDULE ASC", new String[]{String.valueOf(drugId)});
+
+        int count = 0;
+        while (notificationCursor.moveToNext()) {
+            int notificationId = notificationCursor.getInt(notificationCursor.getColumnIndexOrThrow("ID_NOTIFICATION_SCHEDULE"));
+            if (count >= pillsQuantity) {
+                // Usuń nadmiarowe powiadomienie
+                db.delete("NOTIFICATION_SCHEDULE", "ID_NOTIFICATION_SCHEDULE = ?", new String[]{String.valueOf(notificationId)});
+                // Anuluj powiązany alarm
+                cancelAlarm(notificationId);
+            }
+            count++;
+        }
+        notificationCursor.close();
+    }
+
+    private void cancelAlarm(int notificationId) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+        }
+    }
 
     @Override
     public int getItemCount() {

@@ -76,7 +76,7 @@ public class CalendarActivity extends AppCompatActivity {
     private void loadDrugsForSelectedDay(String date) {
         scheduledDrugs.clear();
 
-        int dayOfWeekInt = getDayIntFromDate(date); // Pobranie dnia tygodnia jako liczby
+        int dayOfWeekInt = getDayIntFromDate(date);
         if (dayOfWeekInt == -1) {
             Toast.makeText(this, "Błąd przy pobieraniu dnia tygodnia.", Toast.LENGTH_SHORT).show();
             return;
@@ -118,7 +118,6 @@ public class CalendarActivity extends AppCompatActivity {
 
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-            // Mapa do struktur, gdzie poniedziałek = 1, wtorek = 2, ..., niedziela = 7
             return dayOfWeek;
 
         } catch (Exception e) {
@@ -126,5 +125,4 @@ public class CalendarActivity extends AppCompatActivity {
             return -1;
         }
     }
-
 }

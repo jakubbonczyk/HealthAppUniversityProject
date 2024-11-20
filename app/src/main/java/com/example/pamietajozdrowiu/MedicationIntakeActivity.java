@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MedicationIntakeActivity extends AppCompatActivity {
 
@@ -40,7 +41,15 @@ public class MedicationIntakeActivity extends AppCompatActivity {
 
     private void loadMedications() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM DRUGS", null);
+
+        // Pobranie dzisiejszego dnia tygodnia
+        int today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+
+        String query = "SELECT DISTINCT d.* FROM DRUGS d " +
+                "INNER JOIN NOTIFICATION_SCHEDULE ns ON d.ID_DRUG = ns.ID_DRUG " +
+                "WHERE ns.FREQUENCY = ?";
+
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(today)});
 
         drugList = new ArrayList<>();
         if (cursor.moveToFirst()) {

@@ -47,7 +47,9 @@ public class MedicationIntakeDetailActivity extends AppCompatActivity {
     }
 
     private void loadNotifications() {
-        Cursor cursor = db.rawQuery("SELECT * FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
+        String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().getTime());
+
+        Cursor cursor = db.rawQuery("SELECT * FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG = ? AND DATE(START_DATE) >= DATE(?)", new String[]{String.valueOf(drugId), todayDate});
         List<Notification> notificationList = new ArrayList<>();
 
         if (cursor.moveToFirst()) {
@@ -57,7 +59,7 @@ public class MedicationIntakeDetailActivity extends AppCompatActivity {
                 int isTakenInt = cursor.getInt(cursor.getColumnIndexOrThrow("IS_TAKEN"));
                 boolean isTaken = isTakenInt == 1;
 
-                String frequency = cursor.getString(cursor.getColumnIndexOrThrow("FREQUENCY"));
+                int frequency = cursor.getInt(cursor.getColumnIndexOrThrow("FREQUENCY"));
                 String date = getNextDateForFrequency(frequency);
 
                 Notification notification = new Notification(id, drugId, date, reminderTime, isTaken);
@@ -70,10 +72,18 @@ public class MedicationIntakeDetailActivity extends AppCompatActivity {
         notificationsRecyclerView.setAdapter(notificationAdapter);
     }
 
-    private String getNextDateForFrequency(String frequency) {
-        // Implementacja funkcji zwracającej najbliższą datę dla danego dnia tygodnia
-        // Na potrzeby przykładu zwróćmy dzisiejszą datę
-        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().getTime());
+    private String getNextDateForFrequency(int frequency) {
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_WEEK);
+
+        int daysUntilNext = (frequency - today + 7) % 7;
+        if (daysUntilNext == 0) {
+            // Jeśli dzień powiadomienia to dzisiaj, to wybierz dzisiejszą datę
+            daysUntilNext = 0;
+        }
+        calendar.add(Calendar.DAY_OF_YEAR, daysUntilNext);
+
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
     }
 
 }
