@@ -2,13 +2,20 @@ package com.example.pamietajozdrowiu;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +23,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class AddDrugsActivity extends AppCompatActivity {
 
@@ -32,6 +41,8 @@ public class AddDrugsActivity extends AppCompatActivity {
     private Button cancelButton;
     private SQLiteDatabase db;
     private DatabaseHelper dbHelper;
+    private Spinner sicknessSpinner;
+    private List<String> sicknessList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,8 @@ public class AddDrugsActivity extends AppCompatActivity {
         addButton = findViewById(R.id.button12);
         cancelButton = findViewById(R.id.button11);
         takePhotoButton = findViewById(R.id.button10);
+        sicknessSpinner = findViewById(R.id.sicknessSearchSpinner);
+        loadSicknessData();
 
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(AddDrugsActivity.this, MainActivity.class);
@@ -80,10 +93,10 @@ public class AddDrugsActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             if (extras != null) {
-                takenPhotoBitmap = (Bitmap)extras.get("data");
+                takenPhotoBitmap = (Bitmap) extras.get("data");
                 if (takenPhotoBitmap != null) {
                     drugImageView.setImageBitmap(takenPhotoBitmap);
-                }   else {
+                } else {
                     Toast.makeText(this, "Błąd podczas pobierania zdjęcia", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -100,6 +113,14 @@ public class AddDrugsActivity extends AppCompatActivity {
         String drugName = drugNameEditText.getText().toString().trim();
         String pillsQuantityString = pillsQuantityEditText.getText().toString().trim();
         String expiryDate = addDateButton.getText().toString().trim();
+        String selectedSickness = sicknessSpinner.getSelectedItem().toString();
+
+        if (selectedSickness.equals("Wybierz grupę schorzeń")) {
+            Toast.makeText(this, "Proszę wybrać grupę schorzeń", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int sicknessId = getSicknessId(selectedSickness);
 
         if (drugName.isEmpty() || pillsQuantityString.isEmpty() || expiryDate.equals("Termin ważności")) {
             Toast.makeText(this, "Proszę wypełnić wszystkie pola", Toast.LENGTH_SHORT).show();
@@ -122,12 +143,13 @@ public class AddDrugsActivity extends AppCompatActivity {
 
         byte[] imageBlob = convertBitmapToBlob(takenPhotoBitmap);
 
-        String insertQuery = "INSERT INTO DRUGS (NAME, PILLS_QUANTITY, EXPIRATION_DATE, IMAGE) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO DRUGS (NAME, PILLS_QUANTITY, EXPIRATION_DATE, IMAGE, ID_SICKNESS) VALUES (?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(insertQuery);
         statement.bindString(1, drugName);
         statement.bindLong(2, pillsQuantity);
         statement.bindString(3, expiryDate);
         statement.bindBlob(4, imageBlob);
+        statement.bindLong(5, sicknessId);
 
         long rowId = statement.executeInsert();
 
@@ -143,6 +165,7 @@ public class AddDrugsActivity extends AppCompatActivity {
         drugNameEditText.setText("");
         pillsQuantityEditText.setText("");
         addDateButton.setText("Termin ważności");
+        sicknessSpinner.setSelection(0);
     }
 
     private void openDateDialog() {
@@ -157,5 +180,68 @@ public class AddDrugsActivity extends AppCompatActivity {
         }, year, month, day);
 
         datePickerDialog.show();
+    }
+
+    private void loadSicknessData() {
+        sicknessList = new ArrayList<>();
+        sicknessList.add("Wybierz grupę schorzeń"); // Placeholder
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM SICKNESSES", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String sicknessName = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+                sicknessList.add(sicknessName);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, sicknessList) {
+            @Override
+            public boolean isEnabled(int position) {
+                // Pierwszy element ("Wybierz grupę schorzeń") ma być nieaktywny
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) {
+                    // Ustaw kolor tekstu dla placeholdera
+                    tv.setTextColor(Color.GRAY);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                }
+                return view;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) {
+                    // Placeholder powinien być szary
+                    tv.setTextColor(Color.GRAY);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                }
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.spinner_item);
+        sicknessSpinner.setAdapter(adapter);
+    }
+
+    private int getSicknessId(String sicknessName) {
+        int sicknessId = -1;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT ID_SICKNESS FROM SICKNESSES WHERE NAME = ?", new String[]{sicknessName});
+        if (cursor.moveToFirst()) {
+            sicknessId = cursor.getInt(cursor.getColumnIndexOrThrow("ID_SICKNESS"));
+        }
+        cursor.close();
+        return sicknessId;
     }
 }

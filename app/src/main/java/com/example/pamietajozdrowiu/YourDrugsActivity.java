@@ -40,6 +40,7 @@ public class YourDrugsActivity extends AppCompatActivity {
 
         Button backButton = findViewById(R.id.button4);
         FloatingActionButton addButton = findViewById(R.id.floatingActionButton);
+        FloatingActionButton searchButton = findViewById(R.id.floatingSearchButton);
         drugsRecyclerView = findViewById(R.id.drugsRecyclerView);
         drugsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -53,6 +54,11 @@ public class YourDrugsActivity extends AppCompatActivity {
 
         addButton.setOnClickListener(v -> {
             Intent intent = new Intent(YourDrugsActivity.this, AddDrugsActivity.class);
+            startActivity(intent);
+        });
+
+        searchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(YourDrugsActivity.this, SearchDrugsActivity.class);
             startActivity(intent);
         });
     }

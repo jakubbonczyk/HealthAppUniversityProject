@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 15;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -60,6 +60,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "NAME TEXT NOT NULL" +
                 ")";
         db.execSQL(createSicknessesTable);
+
+        String insertSickness1 = "INSERT INTO SICKNESSES (NAME) VALUES ('nadciśnienie')";
+        String insertSickness2 = "INSERT INTO SICKNESSES (NAME) VALUES ('cukrzyca')";
+        String insertSickness3 = "INSERT INTO SICKNESSES (NAME) VALUES ('alergie')";
+        String insertSickness4 = "INSERT INTO SICKNESSES (NAME) VALUES ('bóle stawów')";
+        String insertSickness5 = "INSERT INTO SICKNESSES (NAME) VALUES ('astma')";
+
+        db.execSQL(insertSickness1);
+        db.execSQL(insertSickness2);
+        db.execSQL(insertSickness3);
+        db.execSQL(insertSickness4);
+        db.execSQL(insertSickness5);
 
         // Tworzenie tabeli USERS
         String createUsersTable = "CREATE TABLE USERS (" +

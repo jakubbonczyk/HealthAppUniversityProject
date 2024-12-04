@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -13,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -75,19 +79,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
 
         holder.takeMedicationButton.setOnClickListener(v -> {
-            // Aktualizuj status powiadomienia w bazie danych
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             db.execSQL("UPDATE NOTIFICATION_SCHEDULE SET IS_TAKEN = 1 WHERE ID_NOTIFICATION_SCHEDULE = ?", new Object[]{notification.getId()});
 
-            // Zmniejsz ilość tabletek w DRUGS
             db.execSQL("UPDATE DRUGS SET PILLS_QUANTITY = PILLS_QUANTITY - 1 WHERE ID_DRUG = ?", new Object[]{notification.getDrugId()});
+
+            Cursor cursor = db.rawQuery("SELECT PILLS_QUANTITY FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(notification.getDrugId())});
+            if (cursor.moveToFirst()) {
+                int pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
+                if (pillsQuantity < 5) {
+                    sendLowStockNotification(notification.getDrugId(), pillsQuantity);
+                }
+            }
+            cursor.close();
 
             // Aktualizuj obiekt Notification
             notification.setTaken(true);
             notifyItemChanged(position);
-
-            // Zaktualizuj zaplanowane przypomnienia
-            updateScheduledReminders(notification.getDrugId());
 
             // Wyświetl Toast
             Toast.makeText(context, "Zapisano przyjęcie leku", Toast.LENGTH_SHORT).show();
@@ -144,4 +152,27 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             takeMedicationButton = itemView.findViewById(R.id.takeMedicationButton);
         }
     }
+
+    private void sendLowStockNotification(int drugId, int pillsQuantity) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT NAME FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
+        String drugName = "lek";
+        if (cursor.moveToFirst()) {
+            drugName = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
+        }
+        cursor.close();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "medication_reminders")
+                .setSmallIcon(R.drawable.face)
+                .setContentTitle("Niska liczba leków")
+                .setContentText("Liczba tabletek dla leku \"" + drugName + "\" wynosi tylko " + pillsQuantity + ". Czas dokupić nowe opakowanie!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(drugId, builder.build());
+        }
+    }
+
 }
