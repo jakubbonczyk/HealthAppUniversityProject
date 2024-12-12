@@ -1,5 +1,6 @@
 package com.example.pamietajozdrowiu;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,12 +9,14 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -49,6 +52,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         String displayText = notification.getDate() + " - " + notification.getReminderTime();
 
         holder.takeMedicationButton.setText(displayText);
+        holder.snoozeButton.setText("");
 
         // Parsuj datę i czas powiadomienia
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -63,19 +67,30 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 holder.takeMedicationButton.setText("Przyjęto");
                 holder.takeMedicationButton.setEnabled(false);
                 holder.takeMedicationButton.setBackgroundColor(Color.GRAY);
+
+                holder.snoozeButton.setEnabled(false);
+                holder.snoozeButton.setBackgroundColor(Color.GRAY);
             } else if (currentDateTime.after(notificationDateTime)) {
-                // Czas powiadomienia minął - przycisk jest aktywny
+                // Czas powiadomienia minął - przyciski są aktywne
                 holder.takeMedicationButton.setEnabled(true);
+                holder.snoozeButton.setEnabled(true);
+                holder.snoozeButton.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));
             } else {
-                // Czas powiadomienia jeszcze nie minął - przycisk jest nieaktywny
+                // Czas powiadomienia jeszcze nie minął - przyciski są nieaktywne
                 holder.takeMedicationButton.setEnabled(false);
                 holder.takeMedicationButton.setBackgroundColor(Color.GRAY);
+
+                holder.snoozeButton.setEnabled(false);
+                holder.snoozeButton.setBackgroundColor(Color.GRAY);
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            // W razie błędu parsowania, ustaw przycisk jako nieaktywny
+            // W razie błędu parsowania, ustaw przyciski jako nieaktywne
             holder.takeMedicationButton.setEnabled(false);
             holder.takeMedicationButton.setBackgroundColor(Color.GRAY);
+
+            holder.snoozeButton.setEnabled(false);
+            holder.snoozeButton.setBackgroundColor(Color.GRAY);
         }
 
         holder.takeMedicationButton.setOnClickListener(v -> {
@@ -84,60 +99,55 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             db.execSQL("UPDATE DRUGS SET PILLS_QUANTITY = PILLS_QUANTITY - 1 WHERE ID_DRUG = ?", new Object[]{notification.getDrugId()});
 
-            Cursor cursor = db.rawQuery("SELECT PILLS_QUANTITY FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(notification.getDrugId())});
-            if (cursor.moveToFirst()) {
-                int pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
-                if (pillsQuantity < 5) {
-                    sendLowStockNotification(notification.getDrugId(), pillsQuantity);
-                }
-            }
-            cursor.close();
-
-            // Aktualizuj obiekt Notification
             notification.setTaken(true);
             notifyItemChanged(position);
 
-            // Wyświetl Toast
             Toast.makeText(context, "Zapisano przyjęcie leku", Toast.LENGTH_SHORT).show();
+        });
+
+        holder.snoozeButton.setOnClickListener(v -> {
+            showSnoozeDialog(notification);
         });
     }
 
-    private void updateScheduledReminders(int drugId) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Pobierz aktualną liczbę tabletek
-        Cursor cursor = db.rawQuery("SELECT PILLS_QUANTITY FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
-        int pillsQuantity = 0;
-        if (cursor.moveToFirst()) {
-            pillsQuantity = cursor.getInt(cursor.getColumnIndexOrThrow("PILLS_QUANTITY"));
-        }
-        cursor.close();
+    private void showSnoozeDialog(Notification notification) {
+        // Opcje do wyboru
+        String[] snoozeOptions = {"1 minuta", "10 minut", "30 minut", "1 godzina", "2 godziny"};
+        int[] snoozeTimes = {1, 10, 30, 60, 120};
 
-        // Pobierz wszystkie przyszłe powiadomienia dla tego leku
-        Cursor notificationCursor = db.rawQuery("SELECT ID_NOTIFICATION_SCHEDULE FROM NOTIFICATION_SCHEDULE WHERE ID_DRUG = ? AND IS_TAKEN = 0 ORDER BY ID_NOTIFICATION_SCHEDULE ASC", new String[]{String.valueOf(drugId)});
-
-        int count = 0;
-        while (notificationCursor.moveToNext()) {
-            int notificationId = notificationCursor.getInt(notificationCursor.getColumnIndexOrThrow("ID_NOTIFICATION_SCHEDULE"));
-            if (count >= pillsQuantity) {
-                // Usuń nadmiarowe powiadomienie
-                db.delete("NOTIFICATION_SCHEDULE", "ID_NOTIFICATION_SCHEDULE = ?", new String[]{String.valueOf(notificationId)});
-                // Anuluj powiązany alarm
-                cancelAlarm(notificationId);
-            }
-            count++;
-        }
-        notificationCursor.close();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Drzemka")
+                .setItems(snoozeOptions, (dialog, which) -> {
+                    int snoozeMinutes = snoozeTimes[which];
+                    snoozeNotification(notification, snoozeMinutes);
+                    Toast.makeText(context, "Drzemka na " + snoozeOptions[which] + " została ustawiona", Toast.LENGTH_SHORT).show();
+                });
+        builder.create().show();
     }
 
-    private void cancelAlarm(int notificationId) {
+    @SuppressLint("ScheduleExactAlarm")
+    private void snoozeNotification(Notification notification, int minutes) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Usuń przekazywanie drug_name, zostaw tylko reminder_time
+        intent.putExtra("reminder_time", notification.getReminderTime());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                notification.getId(), // Użyj unikalnego ID
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        long snoozeTime = System.currentTimeMillis() + minutes * 60 * 1000;
         if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, snoozeTime, pendingIntent);
+            Log.d("NotificationAdapter", "Zaplanowano nowe powiadomienie na: " + new Date(snoozeTime));
         }
     }
+
 
     @Override
     public int getItemCount() {
@@ -146,33 +156,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         Button takeMedicationButton;
+        Button snoozeButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
             takeMedicationButton = itemView.findViewById(R.id.takeMedicationButton);
+            snoozeButton = itemView.findViewById(R.id.snoozeButton);
         }
     }
-
-    private void sendLowStockNotification(int drugId, int pillsQuantity) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT NAME FROM DRUGS WHERE ID_DRUG = ?", new String[]{String.valueOf(drugId)});
-        String drugName = "lek";
-        if (cursor.moveToFirst()) {
-            drugName = cursor.getString(cursor.getColumnIndexOrThrow("NAME"));
-        }
-        cursor.close();
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "medication_reminders")
-                .setSmallIcon(R.drawable.face)
-                .setContentTitle("Niska liczba leków")
-                .setContentText("Liczba tabletek dla leku \"" + drugName + "\" wynosi tylko " + pillsQuantity + ". Czas dokupić nowe opakowanie!")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(drugId, builder.build());
-        }
-    }
-
 }

@@ -14,13 +14,17 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String drugName = intent.getStringExtra("drug_name");
+        // Pobranie czasu przypomnienia
         String reminderTime = intent.getStringExtra("reminder_time");
 
-        // Logowanie momentu uruchomienia receivera
-        Log.d("NotificationReceiver", "Otrzymano powiadomienie o leku: " + drugName + " o godzinie: " + reminderTime);
+        // Sprawdzenie, czy reminderTime jest null
+        if (reminderTime == null || reminderTime.isEmpty()) {
+            Log.e("NotificationReceiver", "Brak wymaganych danych w Intent (reminder_time)");
+            return;
+        }
 
-        String notificationContent = "Przypomnienie o przyjęciu leku: " + drugName + " o godzinie " + reminderTime;
+        // Wyświetlenie powiadomienia
+        String notificationContent = "Przypomnienie o przyjęciu leku o godzinie " + reminderTime;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "medication_reminders")
                 .setSmallIcon(R.drawable.smile)
@@ -31,10 +35,11 @@ public class NotificationReceiver extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-            notificationManager.notify(1, builder.build());
-            Log.d("NotificationReceiver", "Powiadomienie zostało wyświetlone.");
+            notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+            Log.d("NotificationReceiver", "Powiadomienie zostało wyświetlone: " + notificationContent);
         } else {
             Log.e("NotificationReceiver", "Brak uprawnień do wyświetlania powiadomień.");
         }
     }
+
 }

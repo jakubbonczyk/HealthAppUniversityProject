@@ -2,13 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
     android:gravity="center_vertical">
 
     <Button
         android:id="@+id/takeMedicationButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
         android:text="Przyjmij lek" />
+
+    <Button
+        android:id="@+id/snoozeButton"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:text=""
+        android:layout_marginStart="8dp"
+        app:icon="@drawable/snooze"
+        app:iconGravity="textTop"
+        app:iconPadding="@dimen/icon_padding_large"
+        app:iconSize="@dimen/icon_size_small"/>
+
 </LinearLayout>
