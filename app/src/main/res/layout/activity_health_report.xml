@@ -1,25 +1,105 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#101017">
+    android:background="#101017"
+    android:padding="16dp">
 
-    <TextView
-        android:id="@+id/reportTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        android:padding="8dp"
-        android:background="#202020" />
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wróć"
-        android:onClick="finish"
-        android:layout_gravity="center"
-        android:padding="8dp" />
-</LinearLayout>
+        <!-- Sekcja raportu zdrowotnego -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zakres dat dla raportu zdrowotnego"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+
+        <Button
+            android:id="@+id/startDateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wybierz datę początkową"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/endDateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wybierz datę końcową"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/generateReportButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generuj raport zdrowotny"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/reportTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="#202020"
+            android:layout_marginTop="16dp" />
+
+        <!-- Sekcja postępów leczenia -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Zakres dat dla postępów leczenia"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <Button
+            android:id="@+id/progressStartDateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wybierz datę początkową"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/progressEndDateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wybierz datę końcową"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/checkProgressButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sprawdź postępy leczenia"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#303F9F"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/progressTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="#202020"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
