@@ -61,6 +61,23 @@
             android:exported="false"/>
 
         <activity
+            android:name=".HealthReportActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".AddHealthResultsActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".TutorialActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".SelectTutorialActivity"
+            android:exported="false"/>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

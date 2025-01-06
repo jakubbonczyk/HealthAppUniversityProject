@@ -9,5 +9,14 @@
     <string name="healthHistory">KARTOTEKA</string>
     <string name="feelings">TWOJE SAMOPOCZUCIE!</string>
     <string name="drug_image">Zdjecie leku</string>
+    <string name="select_health_result_prompt">Wybierz typ badania</string>
+
+
+    <string-array name="health_result_types">
+        <item>Wybierz typ badania</item>
+        <item>Ciśnienie</item>
+        <item>Cukier</item>
+        <item>Temperatura ciała</item>
+    </string-array>
 
 </resources>

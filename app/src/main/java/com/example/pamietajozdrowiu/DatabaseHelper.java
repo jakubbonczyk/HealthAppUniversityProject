@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 17;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,6 +53,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(ID_DRUG) REFERENCES DRUGS(ID_DRUG)" +
                 ")";
         db.execSQL(createNotificationScheduleTable);
+
+        String createHealthResultsTable = "CREATE TABLE IF NOT EXISTS HEALTH_RESULTS (" +
+                "ID_RESULT INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "ID_USER INTEGER NOT NULL, " +
+                "TYPE TEXT NOT NULL, " +
+                "VALUE TEXT NOT NULL, " +
+                "DATE TEXT NOT NULL, " +
+                "FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER))";
+        db.execSQL(createHealthResultsTable);
+
 
         // Tworzenie tabeli SICKNESSES
         String createSicknessesTable = "CREATE TABLE SICKNESSES (" +
@@ -116,6 +126,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS USERS");
             db.execSQL("DROP TABLE IF EXISTS USER_FEELINGS");
             db.execSQL("DROP TABLE IF EXISTS USER_NOTIFICATIONS");
+            db.execSQL("DROP TABLE IF EXISTS HEALTH_RESULTS");
             onCreate(db);
         }
     }
