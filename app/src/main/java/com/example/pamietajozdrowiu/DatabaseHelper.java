@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "android_database.db";
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 19;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -96,12 +96,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Tworzenie tabeli USER_FEELINGS
         String createUserFeelingsTable = "CREATE TABLE USER_FEELINGS (" +
                 "ID_USER_FEELINGS INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "NAME TEXT NOT NULL, " + // NAME powinno być typu TEXT, nie INTEGER
-                "VALUE INTEGER NOT NULL, " +
-                "ID_USER INTEGER NOT NULL, " +
+                "NAME TEXT NOT NULL, " + // Nazwa uczucia
+                "VALUE INTEGER NOT NULL, " + // Wartość numeryczna uczucia
+                "DATE TEXT NOT NULL, " + // Data wpisu w formacie YYYY-MM-DD
+                "NOTES TEXT, " + // Notatki użytkownika
+                "ID_USER INTEGER NOT NULL, " + // ID użytkownika
                 "FOREIGN KEY(ID_USER) REFERENCES USERS(ID_USER)" +
                 ")";
         db.execSQL(createUserFeelingsTable);
+
 
         // Tworzenie tabeli USER_NOTIFICATIONS
         String createUserNotificationsTable = "CREATE TABLE USER_NOTIFICATIONS (" +
